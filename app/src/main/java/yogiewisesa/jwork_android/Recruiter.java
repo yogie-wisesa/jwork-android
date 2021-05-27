@@ -13,6 +13,10 @@ public class Recruiter {
         this.location = location;
     }
 
+    public int getId(){
+        return id;
+    }
+
     /**
      * getter nama perekrut
      * @return name nama dari perekrut

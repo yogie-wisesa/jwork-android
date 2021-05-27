@@ -19,6 +19,6 @@ public class MenuRequest extends StringRequest {
 
     @Override
     public Map<String, String> getParams() {
-        return params;
+        return null;
     }
 }

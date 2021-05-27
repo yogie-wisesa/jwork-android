@@ -36,11 +36,6 @@ public class MainActivity extends AppCompatActivity {
         // preparing list data
         refreshList();
 
-        listAdapter = new MainListAdapter(this, listRecruiter, childMapping);
-
-        // setting list adapter
-        expListView.setAdapter(listAdapter);
-
 
     }
 
@@ -72,14 +67,21 @@ public class MainActivity extends AppCompatActivity {
                                     job.getInt("id"),
                                     job.getString("name"),
                                     rec,
-                                    job.getInt("price"),
+                                    job.getInt("fee"),
                                     job.getString("category")
                             );
 
-                            listRecruiter.add(rec);
                             jobIdList.add(j);
 
-
+                            boolean tempStatus = true;
+                            for(Recruiter rec1 : listRecruiter) {
+                                if(rec1.getId() == rec1.getId()){
+                                    tempStatus = false;
+                                }
+                            }
+                            if(tempStatus){
+                                listRecruiter.add(rec);
+                            }
                         }
                         for (Recruiter rr : listRecruiter){
                             ArrayList<Job> temp = new ArrayList<>();
@@ -93,7 +95,7 @@ public class MainActivity extends AppCompatActivity {
                             }
                             childMapping.put(rr, temp);
                         }
-                        listAdapter = new MainListAdapter(MainActivity.this, listRecruiter, childMapping);
+                        listAdapter = new MainListAdapter(getApplicationContext(), listRecruiter, childMapping);
                         expListView.setAdapter(listAdapter);
                     }
                 }  catch (JSONException e){
