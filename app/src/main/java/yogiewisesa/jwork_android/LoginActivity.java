@@ -44,6 +44,9 @@ public class LoginActivity extends AppCompatActivity {
                             if (jsonObject != null) {
                                 Toast.makeText(LoginActivity.this, "Login Successful",
                                         Toast.LENGTH_LONG).show();
+
+                                Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                                startActivity(intent);
                             }
                         } catch (JSONException e){
                             Toast.makeText(LoginActivity.this, "Login Failed",
