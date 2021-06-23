@@ -46,6 +46,7 @@ public class LoginActivity extends AppCompatActivity {
                                         Toast.LENGTH_LONG).show();
 
                                 Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                                intent.putExtra("userId", jsonObject.getInt("id"));
                                 startActivity(intent);
                             }
                         } catch (JSONException e){

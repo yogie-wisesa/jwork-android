@@ -2,7 +2,9 @@ package yogiewisesa.jwork_android;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.ExpandableListView;
 
 import com.android.volley.RequestQueue;
@@ -30,12 +32,39 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        final int jobseekerId = getIntent().getExtras().getInt("userId");
+
+
         // get the listview
         expListView = (ExpandableListView) findViewById(R.id.lvExp);
 
         // preparing list data
         refreshList();
 
+        findViewById(R.id.btnApplied).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(MainActivity.this, SelesaiJobActivity.class);
+                intent.putExtra("jobseekerId", jobseekerId);
+                startActivity(intent);
+            }
+        });
+
+        expListView.setOnChildClickListener(new ExpandableListView.OnChildClickListener() {
+            @Override
+            public boolean onChildClick(ExpandableListView expandableListView, View view, int i, int i1, long l) {
+
+                Intent intent = new Intent(MainActivity.this, ApplyJobActivity.class);
+                intent.putExtra("jobseekerId", jobseekerId);
+                intent.putExtra("jobId", childMapping.get(listRecruiter.get(i)).get(i1).getId());
+                intent.putExtra("jobName", childMapping.get(listRecruiter.get(i)).get(i1).getName());
+                intent.putExtra("jobCategory", childMapping.get(listRecruiter.get(i)).get(i1).getCategory());
+                intent.putExtra("jobFee", childMapping.get(listRecruiter.get(i)).get(i1).getFee());
+                startActivity(intent);
+
+                return true;
+            }
+        });
 
     }
 
@@ -63,6 +92,8 @@ public class MainActivity extends AppCompatActivity {
                                                             recruiter.getString("phoneNumber"),
                                                             loc);
 
+//                            listRecruiter.add(rec);
+
                             Job j = new Job(
                                     job.getInt("id"),
                                     job.getString("name"),
@@ -74,14 +105,18 @@ public class MainActivity extends AppCompatActivity {
                             jobIdList.add(j);
 
                             boolean tempStatus = true;
-                            for(Recruiter rec1 : listRecruiter) {
-                                if(rec1.getId() == rec1.getId()){
+                            for(Recruiter recPtr : listRecruiter) {
+                                if(recPtr.getId() == rec.getId()){
                                     tempStatus = false;
                                 }
                             }
                             if(tempStatus){
                                 listRecruiter.add(rec);
                             }
+
+
+
+
                         }
                         for (Recruiter rr : listRecruiter){
                             ArrayList<Job> temp = new ArrayList<>();
