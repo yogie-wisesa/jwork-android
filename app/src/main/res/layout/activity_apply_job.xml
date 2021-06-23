@@ -114,20 +114,20 @@
                         app:layout_constraintTop_toTopOf="parent">
 
                         <RadioButton
-                            android:id="@+id/cash"
+                            android:id="@+id/ewallet"
                             android:layout_width="146dp"
                             android:layout_height="wrap_content"
                             android:text="E-Wallet" />
 
                         <RadioButton
-                            android:id="@+id/cashless"
+                            android:id="@+id/bank"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:text="Bank" />
                     </RadioGroup>
 
                     <TextView
-                        android:id="@+id/textCode"
+                        android:id="@+id/staticReferralCode"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="56dp"

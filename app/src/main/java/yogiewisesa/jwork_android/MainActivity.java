@@ -41,14 +41,7 @@ public class MainActivity extends AppCompatActivity {
         // preparing list data
         refreshList();
 
-        findViewById(R.id.btnApplied).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(MainActivity.this, SelesaiJobActivity.class);
-                intent.putExtra("jobseekerId", jobseekerId);
-                startActivity(intent);
-            }
-        });
+
 
         expListView.setOnChildClickListener(new ExpandableListView.OnChildClickListener() {
             @Override
@@ -63,6 +56,14 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(intent);
 
                 return true;
+            }
+        });
+        findViewById(R.id.btnApplied).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(MainActivity.this, SelesaiJobActivity.class);
+                intent.putExtra("jobseekerId", jobseekerId);
+                startActivity(intent);
             }
         });
 

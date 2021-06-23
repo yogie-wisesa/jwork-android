@@ -7,7 +7,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class JobFetchRequest extends StringRequest {
-    private static String URL = "http://10.0.2.2:8080/invoice/";
+    private static String URL = "http://10.0.2.2:8080/invoice/jobseeker/";
     private Map<String, String> params;
 
     public JobFetchRequest(int currentUserId, Response.Listener<String> listener) {

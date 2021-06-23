@@ -171,7 +171,7 @@
                     app:layout_constraintTop_toTopOf="parent"/>
 
                 <TextView
-                    android:id="@+id/textCode"
+                    android:id="@+id/staticReferralCode"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="56dp"

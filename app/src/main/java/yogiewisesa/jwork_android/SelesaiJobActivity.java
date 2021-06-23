@@ -30,6 +30,18 @@ public class SelesaiJobActivity extends AppCompatActivity {
     TextView total_fee = findViewById(R.id.total_fee);
     TextView invoice_status = findViewById(R.id.invoice_status);
 
+    private static int jobSeekerId;
+    private int jobSeekerInvoiceId;
+    private String date;
+    private String paymentType;
+    private int totalFee;
+    private static String jobSeekerName;
+    private static String jobNameVar;
+    private static int jobFee;
+    private String invoiceStatus;
+    private String refCode;
+    private JSONObject bonus;
+
     int currentUserId = getIntent().getExtras().getInt("jobseekerId");
 
 
@@ -38,14 +50,14 @@ public class SelesaiJobActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_selesai_job);
 
-        invoice_id.setVisibility(View.GONE);
-        jobseeker_name.setVisibility(View.GONE);
-        jobName.setVisibility(View.GONE);
-        invoice_date.setVisibility(View.GONE);
-        payment_type.setVisibility(View.GONE);
-        referralCode.setVisibility(View.GONE);
-        total_fee.setVisibility(View.GONE);
-        invoice_status.setVisibility(View.GONE);
+        invoice_id.setVisibility(View.INVISIBLE);
+        jobseeker_name.setVisibility(View.INVISIBLE);
+        jobName.setVisibility(View.INVISIBLE);
+        invoice_date.setVisibility(View.INVISIBLE);
+        payment_type.setVisibility(View.INVISIBLE);
+        referralCode.setVisibility(View.INVISIBLE);
+        total_fee.setVisibility(View.INVISIBLE);
+        invoice_status.setVisibility(View.INVISIBLE);
 
         fetchJob();
 
@@ -102,16 +114,40 @@ public class SelesaiJobActivity extends AppCompatActivity {
             public void onResponse(String response) {
                 try {
                     JSONArray jsonResponse = new JSONArray(response);
-                    JSONObject invoice = jsonResponse.getJSONObject(jsonResponse.length()-1);
-                    JSONObject job = invoice.getJSONArray("jobs").getJSONObject(0);
-                    JSONObject jobseeker = invoice.getJSONObject("jobseeker");
+                    for (int i = 0; i < jsonResponse.length(); i++) {
+                        JSONObject jsonInvoice = jsonResponse.getJSONObject(i);
+                        invoiceStatus = jsonInvoice.getString("invoiceStatus");
+                        jobSeekerInvoiceId = jsonInvoice.getInt("id");
+                        date = jsonInvoice.getString("date");
+                        paymentType = jsonInvoice.getString("paymentType");
+                        totalFee = jsonInvoice.getInt("totalFee");
+                        refCode = "---";
+                        try {
+                            bonus = jsonInvoice.getJSONObject("bonus");
+                            refCode = bonus.getString("referralCode");
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
 
-                    invoice_id.setText(String.valueOf(invoice.getInt("id")));
-                    jobseeker_name.setText(jobseeker.getString("name"));
-                    jobName.setText(job.getString("name"));
-                    invoice_date.setText(invoice.getString("date"));
-                    total_fee.setText(String.valueOf(invoice.getInt("total_fee")));
-                    invoice_status.setText(invoice.getString("invoiceStatus"));
+                        invoice_date.setText(date.substring(0, 10));
+                        payment_type.setText(paymentType);
+                        total_fee.setText(String.valueOf(totalFee));
+                        invoice_status.setText(invoiceStatus);
+                        referralCode.setText(refCode);
+
+                        JSONObject jsonCustomer = jsonInvoice.getJSONObject("jobseeker");
+                        jobSeekerName = jsonCustomer.getString("name");
+                        jobseeker_name.setText(jobSeekerName);
+
+                        JSONArray jsonJobs = jsonInvoice.getJSONArray("jobs");
+                        for (int j = 0; j < jsonJobs.length(); j++) {
+                            JSONObject jsonJobObj = jsonJobs.getJSONObject(j);
+                            jobNameVar = jsonJobObj.getString("name");
+                            jobName.setText(jobNameVar);
+                            jobFee = jsonJobObj.getInt("fee");
+                            total_fee.setText(String.valueOf(jobFee));
+                        }
+                    }
 
                     invoice_id.setVisibility(View.VISIBLE);
                     jobseeker_name.setVisibility(View.VISIBLE);
@@ -125,7 +161,7 @@ public class SelesaiJobActivity extends AppCompatActivity {
                 }
                 catch (JSONException e){
                     startActivity(new Intent(SelesaiJobActivity.this, MainActivity.class));
-                    Log.d(TAG, "Load data failed.");
+                    e.printStackTrace();
                 }
             }
         };
