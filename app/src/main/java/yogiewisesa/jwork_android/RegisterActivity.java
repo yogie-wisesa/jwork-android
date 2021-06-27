@@ -1,3 +1,10 @@
+/**
+ * @author Yogie Wisesa
+ * @version 26/6/21
+ * 
+ * class register activity
+ * untuk menghandle view dan activity register
+ */
 package yogiewisesa.jwork_android;
 
 import androidx.appcompat.app.ActionBar;
@@ -17,7 +24,11 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 public class RegisterActivity extends AppCompatActivity {
-
+    
+    /**
+     * method oncreate untuk pembuatan view
+     * @param savedInstanceState
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -31,16 +42,24 @@ public class RegisterActivity extends AppCompatActivity {
         EditText etPassword = findViewById(R.id.etPasswordReg);
         Button btnRegister = findViewById(R.id.btnRegister);
 
+        //listener tombol register
         btnRegister.setOnClickListener(new View.OnClickListener() {
+
+            /**
+             * method pendengar ketika tombol register ditekan
+             * @param view
+             */
             @Override
             public void onClick(View view) {
-//                Toast.makeText(RegisterActivity.this, "Register Pressed",
-//                        Toast.LENGTH_LONG).show();
                 String name = etName.getText().toString();
                 String email = etEmail.getText().toString();
                 String password = etPassword.getText().toString();
 
                 Response.Listener<String> responseListener = new Response.Listener<String>(){
+                    /**
+                     * method pendengar response json dari jwork
+                     * @param response
+                     */
                     @Override
                     public void onResponse(String response){
                         try{

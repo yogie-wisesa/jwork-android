@@ -1,3 +1,10 @@
+/**
+ * @author Yogie Wisesa
+ * @version 26/6/21
+ * 
+ * class recruiter
+ * untuk menghandle objek recruiter
+ */
 package yogiewisesa.jwork_android;
 
 public class Recruiter {
@@ -5,6 +12,14 @@ public class Recruiter {
     private String name, email, phoneNumber;
     private Location location;
 
+    /**
+     * constructor objek recruiter
+     * @param id
+     * @param name
+     * @param email
+     * @param phoneNumber
+     * @param location
+     */
     public Recruiter(int id, String name, String email, String phoneNumber, Location location){
         this.id = id;
         this.email = email;
@@ -13,6 +28,10 @@ public class Recruiter {
         this.location = location;
     }
 
+    /**
+     * method getter id recruiter
+     * @return
+     */
     public int getId(){
         return id;
     }

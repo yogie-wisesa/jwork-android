@@ -1,3 +1,10 @@
+/**
+ * @author Yogie Wisesa
+ * @version 26/6/21
+ * 
+ * class login activity
+ * untuk menghandle view dan aktifitas login
+ */
 package yogiewisesa.jwork_android;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -20,6 +27,10 @@ import org.json.JSONObject;
 
 public class LoginActivity extends AppCompatActivity {
 
+    /**
+     * class oncreate saat pembuatan view
+     * @param savedInstanceState
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
@@ -31,12 +42,26 @@ public class LoginActivity extends AppCompatActivity {
         Button btnLogin = findViewById(R.id.btnLogin);
         TextView tvRegister = findViewById(R.id.tvRegister);
 
+        etEmail.setText("test@test.com");
+        etPassword.setText("Test1234");
+
+        // listener tombol login
         btnLogin.setOnClickListener(new View.OnClickListener(){
+
+            /**
+             * method membaca oncreate
+             * @param view
+             */
             @Override
             public void onClick(View view){
                 String email = etEmail.getText().toString();
                 String password = etPassword.getText().toString();
                 Response.Listener<String> responseListener = new Response.Listener<String>(){
+
+                    /**
+                     * method untuk mendengar response dari jwork
+                     * @param response
+                     */
                     @Override
                     public void onResponse(String response){
                         try{
@@ -60,7 +85,16 @@ public class LoginActivity extends AppCompatActivity {
                 queue.add(loginRequest);
             }
         });
+
+        /**
+         * listener untuk tombol register
+         */
         tvRegister.setOnClickListener(new View.OnClickListener() {
+
+            /**
+             * method untuk membaca tombol ditekan
+             * @param view
+             */
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(LoginActivity.this, RegisterActivity.class);

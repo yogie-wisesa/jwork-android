@@ -1,3 +1,10 @@
+/**
+ * @author Yogie Wisesa
+ * @version 26/6/21
+ * 
+ * class job
+ * untuk menghandle objek job
+ */
 package yogiewisesa.jwork_android;
 
 public class Job {
@@ -5,6 +12,14 @@ public class Job {
     private String name, category;
     private Recruiter recruiter;
 
+    /**
+     * constructor objek job
+     * @param id
+     * @param name
+     * @param recruiter
+     * @param fee
+     * @param category
+     */
     public Job(int id, String name, Recruiter recruiter, int fee, String category){
         this.id = id;
         this.name = name;

@@ -1,3 +1,11 @@
+/**
+ * @author Yogie Wisesa
+ * @version 26/6/21
+ * 
+ * class job batal request
+ * untuk menghandle pembatalan invoice
+ * dan mengganti status invoice menjadi cancelled
+ */
 package yogiewisesa.jwork_android;
 
 import com.android.volley.Response;
@@ -10,6 +18,11 @@ public class JobBatalRequest extends StringRequest {
     private static String URL = "http://10.0.2.2:8080/invoice/invoiceStatus/";
     private Map<String, String> params;
 
+    /**
+     * constructor job batal request
+     * @param id
+     * @param listener
+     */
     public JobBatalRequest(String id, Response.Listener<String> listener) {
         super(Method.PUT, URL+id, listener, null);
         params = new HashMap<>();
@@ -17,6 +30,10 @@ public class JobBatalRequest extends StringRequest {
         params.put("invoiceStatus", "Cancelled");
     }
 
+    /**
+     * method getparam
+     * @return params
+     */
     @Override
     public Map<String, String> getParams(){
         return params;

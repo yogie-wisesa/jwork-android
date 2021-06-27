@@ -1,17 +1,28 @@
+/**
+ * @author Yogie Wisesa
+ * @version 26/6/21
+ * 
+ * class selesai job activity
+ * untuk menghandle view selesai job
+ * dan menampilkan invoice
+ */
 package yogiewisesa.jwork_android;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.toolbox.Volley;
+import com.google.android.material.snackbar.Snackbar;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -21,153 +32,178 @@ import static android.content.ContentValues.TAG;
 
 public class SelesaiJobActivity extends AppCompatActivity {
 
-    TextView invoice_id = findViewById(R.id.invoice_id);
-    TextView jobseeker_name = findViewById(R.id.jobseeker_name);
-    TextView jobName = findViewById(R.id.jobName);
-    TextView invoice_date = findViewById(R.id.invoice_date);
-    TextView payment_type = findViewById(R.id.payment_type);
-    TextView referralCode = findViewById(R.id.referralCode);
-    TextView total_fee = findViewById(R.id.total_fee);
-    TextView invoice_status = findViewById(R.id.invoice_status);
+    private int jobseekerId;
+    private TextView tvJobseekerName, tvInvoiceDate, tvPaymentType, tvInvoiceStatus, tvReferralCode, tvJobName, tvFeeJob, tvTotalFee;
+    private Button btnCancel, btnFinished;
+    private int invoiceId;
 
-    private static int jobSeekerId;
-    private int jobSeekerInvoiceId;
-    private String date;
-    private String paymentType;
-    private int totalFee;
-    private static String jobSeekerName;
-    private static String jobNameVar;
-    private static int jobFee;
-    private String invoiceStatus;
-    private String refCode;
-    private JSONObject bonus;
-
-    int currentUserId = getIntent().getExtras().getInt("jobseekerId");
-
-
+    /**
+     * method oncreate untuk membuat view
+     * @param savedInstanceState
+     */
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState)
+    {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_selesai_job);
 
-        invoice_id.setVisibility(View.INVISIBLE);
-        jobseeker_name.setVisibility(View.INVISIBLE);
-        jobName.setVisibility(View.INVISIBLE);
-        invoice_date.setVisibility(View.INVISIBLE);
-        payment_type.setVisibility(View.INVISIBLE);
-        referralCode.setVisibility(View.INVISIBLE);
-        total_fee.setVisibility(View.INVISIBLE);
-        invoice_status.setVisibility(View.INVISIBLE);
+        tvJobseekerName = findViewById(R.id.jobseeker_name);
+        tvInvoiceDate = findViewById(R.id.invoice_date);
+        tvPaymentType = findViewById(R.id.payment_type);
+        tvReferralCode = findViewById(R.id.referralCode);
+        tvJobName = findViewById(R.id.jobName);
+        tvTotalFee = findViewById(R.id.total_fee);
+        btnCancel = findViewById(R.id.btnCancel);
+        btnFinished = findViewById(R.id.btnFinish);
 
+        tvJobseekerName.setVisibility(View.INVISIBLE);
+        tvInvoiceDate.setVisibility(View.INVISIBLE);
+        tvPaymentType .setVisibility(View.INVISIBLE);
+        tvReferralCode.setVisibility(View.INVISIBLE);
+        tvJobName.setVisibility(View.INVISIBLE);
+        tvTotalFee.setVisibility(View.INVISIBLE);
+        btnCancel.setVisibility(View.INVISIBLE);
+        btnFinished.setVisibility(View.INVISIBLE);
+
+
+        Intent intent = getIntent();
+        jobseekerId = intent.getIntExtra("jobseekerId", 0);
         fetchJob();
 
-        findViewById(R.id.btnFinish).setOnClickListener(new View.OnClickListener() {
+        //Button batal
+        btnCancel.setOnClickListener(new View.OnClickListener(){
+
+            /**
+             * method ketika tombol batal diklik
+             * @param v
+             */
             @Override
-            public void onClick(View view) {
-                Response.Listener<String> responseListener = new Response.Listener<String>() {
+            public void onClick(View v){
+                Response.Listener<String> responseListener = new Response.Listener<String>(){
+
+                    /**
+                     * method pendengar response dari jwork
+                     * @param response
+                     */
                     @Override
-                    public void onResponse(String response) {
+                    public void onResponse(String response){
                         try {
                             JSONObject jsonObject = new JSONObject(response);
-                            Toast.makeText(SelesaiJobActivity.this, "Invoice change successful", Toast.LENGTH_SHORT).show();
+                            if (jsonObject != null) {
+                                Toast.makeText(SelesaiJobActivity.this, "Your job has been canceled!", Toast.LENGTH_LONG).show();
+                                btnCancel.setEnabled(false);
+                                btnFinished.setEnabled(false);
+                            }
                         } catch (JSONException e) {
                             e.printStackTrace();
-                            Toast.makeText(SelesaiJobActivity.this, "Invoice change failed", Toast.LENGTH_SHORT).show();
                         }
                     }
                 };
-
-                JobSelesaiRequest selesaiRequest = new JobSelesaiRequest(invoice_id + "", responseListener);
+                JobBatalRequest jobBatalRequest = new JobBatalRequest(String.valueOf(invoiceId), responseListener);
                 RequestQueue queue = Volley.newRequestQueue(SelesaiJobActivity.this);
-                queue.add(selesaiRequest);
+                queue.add(jobBatalRequest);
             }
         });
 
-        findViewById(R.id.btnCancel).setOnClickListener(new View.OnClickListener() {
+        //Button Finish
+        btnFinished.setOnClickListener(new View.OnClickListener(){
+
+            /**
+             * method ketika tombol finish ditekan
+             * @param v
+             */
             @Override
-            public void onClick(View view) {
+            public void onClick(View v) {
                 Response.Listener<String> responseListener = new Response.Listener<String>() {
                     @Override
-                    public void onResponse(String response) {
+                    public void onResponse(String response){
                         try {
                             JSONObject jsonObject = new JSONObject(response);
-                            Toast.makeText(SelesaiJobActivity.this, "Invoice change successful", Toast.LENGTH_SHORT).show();
+                            if (jsonObject != null) {
+                                Toast.makeText(SelesaiJobActivity.this, "Your job has been Finished!", Toast.LENGTH_LONG).show();
+                                btnFinished.setEnabled(false);
+                                btnCancel.setEnabled(false);
+                            }
                         } catch (JSONException e) {
                             e.printStackTrace();
-                            Toast.makeText(SelesaiJobActivity.this, "Invoice change failed", Toast.LENGTH_SHORT).show();
                         }
-
                     }
                 };
-
-                JobBatalRequest batalRequest = new JobBatalRequest(invoice_id + "", responseListener);
+                JobSelesaiRequest jobSelesaiRequest = new JobSelesaiRequest(String.valueOf(invoiceId), responseListener);
                 RequestQueue queue = Volley.newRequestQueue(SelesaiJobActivity.this);
-                queue.add(batalRequest);
+                queue.add(jobSelesaiRequest);
             }
         });
-
     }
 
-    protected void fetchJob(){
-        Response.Listener<String> responseListener = new Response.Listener<String>() {
+    /**
+     * method fetchjob untuk request data invoice dari jobseeker
+     * dan memasukkannya ke view selesaijob
+     */
+    public void fetchJob(){
+        Response.Listener<String> responseListener = new Response.Listener<String>(){
+            /**
+             * method pendengar response dari jwork
+             * @param response
+             */
             @Override
-            public void onResponse(String response) {
+            public void onResponse(String response){
                 try {
                     JSONArray jsonResponse = new JSONArray(response);
-                    for (int i = 0; i < jsonResponse.length(); i++) {
-                        JSONObject jsonInvoice = jsonResponse.getJSONObject(i);
-                        invoiceStatus = jsonInvoice.getString("invoiceStatus");
-                        jobSeekerInvoiceId = jsonInvoice.getInt("id");
-                        date = jsonInvoice.getString("date");
-                        paymentType = jsonInvoice.getString("paymentType");
-                        totalFee = jsonInvoice.getInt("totalFee");
-                        refCode = "---";
-                        try {
-                            bonus = jsonInvoice.getJSONObject("bonus");
-                            refCode = bonus.getString("referralCode");
-                        } catch (JSONException e) {
-                            e.printStackTrace();
+                    System.out.println(jsonResponse.length());
+                    if (jsonResponse != null) {
+                        for(int i = 0; i < jsonResponse.length(); i++) {
+                            //Object Invoice dan set text jobseekername
+                            JSONObject invoice = jsonResponse.getJSONObject(i);
+                            String jobseekerName = invoice.getJSONObject("jobseeker").getString("name");
+                            tvJobseekerName.setText(jobseekerName);
+
+                            invoiceId = invoice.getInt("id");
+
+                            //Object Invoice Date
+                            String date = invoice.getString("date");
+                            tvInvoiceDate.setText(date);
+
+                            //Payment Type
+                            String paymentType = invoice.getString("paymentType");
+                            tvPaymentType.setText(paymentType);
+
+                            //referral Code
+                            if (paymentType.equals("EwalletPayment")){
+                                tvReferralCode.setText(paymentType);
+                            }
+
+                            //Job Name
+                            JSONArray jobList = invoice.getJSONArray("jobs");
+                            JSONObject job = jobList.getJSONObject(0);
+                            String jobName = job.getString("name");
+                            tvJobName.setText(jobName);
+
+
+                            //Total Fee
+                            int totalFee = invoice.getInt("totalFee");
+                            tvTotalFee.setText(Integer.toString(totalFee));
+
+                            System.out.println(tvJobseekerName);
                         }
-
-                        invoice_date.setText(date.substring(0, 10));
-                        payment_type.setText(paymentType);
-                        total_fee.setText(String.valueOf(totalFee));
-                        invoice_status.setText(invoiceStatus);
-                        referralCode.setText(refCode);
-
-                        JSONObject jsonCustomer = jsonInvoice.getJSONObject("jobseeker");
-                        jobSeekerName = jsonCustomer.getString("name");
-                        jobseeker_name.setText(jobSeekerName);
-
-                        JSONArray jsonJobs = jsonInvoice.getJSONArray("jobs");
-                        for (int j = 0; j < jsonJobs.length(); j++) {
-                            JSONObject jsonJobObj = jsonJobs.getJSONObject(j);
-                            jobNameVar = jsonJobObj.getString("name");
-                            jobName.setText(jobNameVar);
-                            jobFee = jsonJobObj.getInt("fee");
-                            total_fee.setText(String.valueOf(jobFee));
-                        }
+                        tvJobseekerName.setVisibility(View.VISIBLE);
+                        tvInvoiceDate.setVisibility(View.VISIBLE);
+                        tvPaymentType .setVisibility(View.VISIBLE);
+                        tvReferralCode.setVisibility(View.VISIBLE);
+                        tvJobName.setVisibility(View.VISIBLE);
+                        tvTotalFee.setVisibility(View.VISIBLE);
+                        btnCancel.setVisibility(View.VISIBLE);
+                        btnFinished.setVisibility(View.VISIBLE);
                     }
-
-                    invoice_id.setVisibility(View.VISIBLE);
-                    jobseeker_name.setVisibility(View.VISIBLE);
-                    jobName.setVisibility(View.VISIBLE);
-                    invoice_date.setVisibility(View.VISIBLE);
-                    payment_type.setVisibility(View.VISIBLE);
-                    referralCode.setVisibility(View.VISIBLE);
-                    total_fee.setVisibility(View.VISIBLE);
-                    invoice_status.setVisibility(View.VISIBLE);
-
+                } catch (JSONException e) {
+                    System.out.println(e);
+                    finish();
                 }
-                catch (JSONException e){
-                    startActivity(new Intent(SelesaiJobActivity.this, MainActivity.class));
-                    e.printStackTrace();
-                }
+
             }
         };
-
-        JobFetchRequest fetchRequest = new JobFetchRequest(currentUserId, responseListener);
+        JobFetchRequest jobFetchRequest = new JobFetchRequest(String.valueOf(jobseekerId), responseListener);
         RequestQueue queue = Volley.newRequestQueue(SelesaiJobActivity.this);
-        queue.add(fetchRequest);
+        queue.add(jobFetchRequest);
     }
 }

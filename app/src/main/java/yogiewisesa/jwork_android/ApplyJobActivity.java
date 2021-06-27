@@ -1,3 +1,10 @@
+/**
+ * @author Yogie Wisesa
+ * @version 26/6/21
+ * 
+ * class apply job activity
+ * untuk menghandle view dan activity apply job
+ */
 package yogiewisesa.jwork_android;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -24,11 +31,16 @@ public class ApplyJobActivity extends AppCompatActivity {
     private String jobName, jobCategory, selectedPayment;
     private double jobFee;
 
+    /**
+     * method oncreate untuk pembuatan view
+     * @param savedInstanceState
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_apply_job);
 
+        // mengambil intent extra dari activity sebelumnya
         Bundle extras = getIntent().getExtras();
         if(extras != null){
             jobseekerID = extras.getInt("jobseekerId");
@@ -38,6 +50,7 @@ public class ApplyJobActivity extends AppCompatActivity {
             jobFee = extras.getInt("jobFee");
         }
 
+        // inisiasi view
         EditText referral_code = findViewById(R.id.referral_code);
         TextView textCode = findViewById(R.id.staticReferralCode);
         TextView job_name = findViewById(R.id.job_name);
@@ -57,7 +70,15 @@ public class ApplyJobActivity extends AppCompatActivity {
         job_fee.setText(String.valueOf(jobFee));
         total_fee.setText("0");
 
+        /**
+         * listener untuk radio group metode pembayaran
+         */
         radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+            /**
+             * method untuk membaca radio button
+             * @param radioGroup
+             * @param i
+             */
             @Override
             public void onCheckedChanged(RadioGroup radioGroup, int i) {
                 RadioButton mRadioButton = findViewById(i);
@@ -78,7 +99,14 @@ public class ApplyJobActivity extends AppCompatActivity {
             }
         });
 
+        /**
+         * listener button hitung
+         */
         hitung.setOnClickListener(new View.OnClickListener() {
+            /**
+             * method untuk membaca klik tombol
+             * @param view
+             */
             @Override
             public void onClick(View view) {
                 int radioId = radioGroup.getCheckedRadioButtonId();
@@ -130,7 +158,15 @@ public class ApplyJobActivity extends AppCompatActivity {
             }
         });
 
+        /**
+         * listener button apply
+         */
         btnApply.setOnClickListener(new View.OnClickListener() {
+
+            /**
+             * method untuk membaca klik tombol
+             * @param view
+             */
             @Override
             public void onClick(View view) {
 
@@ -144,7 +180,7 @@ public class ApplyJobActivity extends AppCompatActivity {
                     public void onResponse(String response) {
                         try {
                             JSONObject jsonObject = new JSONObject(response);
-                            if (response != null){
+                            if (jsonObject != null){
                                 Toast.makeText(ApplyJobActivity.this, "Apply successful", Toast.LENGTH_SHORT).show();
                             }
                         } catch (JSONException e) {

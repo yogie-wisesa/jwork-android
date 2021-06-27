@@ -1,3 +1,12 @@
+/**
+ * @author Yogie Wisesa
+ * @version 26/6/21
+ * 
+ * class main activity
+ * untuk menghandle view main 
+ * dan split view 
+ *
+ */
 package yogiewisesa.jwork_android;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -27,6 +36,10 @@ public class MainActivity extends AppCompatActivity {
     private ArrayList<Job> jobIdList = new ArrayList<>();
     private HashMap<Recruiter, ArrayList<Job>> childMapping = new HashMap<>();
 
+    /**
+     * method oncreate saat membuat view
+     * @param savedInstanceState
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -42,8 +55,18 @@ public class MainActivity extends AppCompatActivity {
         refreshList();
 
 
-
+        // listener klik tombol pekerjaan
         expListView.setOnChildClickListener(new ExpandableListView.OnChildClickListener() {
+
+            /**
+             * method pendengar klik 
+             * @param expandableListView
+             * @param view
+             * @param i
+             * @param i1
+             * @param l
+             * @return
+             */
             @Override
             public boolean onChildClick(ExpandableListView expandableListView, View view, int i, int i1, long l) {
 
@@ -58,19 +81,27 @@ public class MainActivity extends AppCompatActivity {
                 return true;
             }
         });
-        findViewById(R.id.btnApplied).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(MainActivity.this, SelesaiJobActivity.class);
-                intent.putExtra("jobseekerId", jobseekerId);
-                startActivity(intent);
-            }
+
+        /**
+         * listener tombol applied job
+         */
+        findViewById(R.id.btnApplied).setOnClickListener(view -> {
+            Intent intent = new Intent(MainActivity.this, SelesaiJobActivity.class);
+            intent.putExtra("jobseekerId", jobseekerId);
+            startActivity(intent);
         });
 
     }
 
+    /**
+     * method refresh list untuk main list adapter
+     */
     protected void refreshList(){
         Response.Listener<String> responseListener = new Response.Listener<String>(){
+            /**
+             * method pendengar response dari jwork
+             * @param response
+             */
             @Override
             public void onResponse(String response){
                 try{
@@ -93,8 +124,6 @@ public class MainActivity extends AppCompatActivity {
                                                             recruiter.getString("phoneNumber"),
                                                             loc);
 
-//                            listRecruiter.add(rec);
-
                             Job j = new Job(
                                     job.getInt("id"),
                                     job.getString("name"),
@@ -105,6 +134,7 @@ public class MainActivity extends AppCompatActivity {
 
                             jobIdList.add(j);
 
+                            // conditional agar recruiter tidak terbaca dua kali
                             boolean tempStatus = true;
                             for(Recruiter recPtr : listRecruiter) {
                                 if(recPtr.getId() == rec.getId()){
@@ -114,9 +144,6 @@ public class MainActivity extends AppCompatActivity {
                             if(tempStatus){
                                 listRecruiter.add(rec);
                             }
-
-
-
 
                         }
                         for (Recruiter rr : listRecruiter){

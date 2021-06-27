@@ -1,14 +1,31 @@
+/**
+ * @author Yogie Wisesa
+ * @version 26/6/21
+ * 
+ * class location
+ * untuk menghandle objek location dari recruiter
+ */
 package yogiewisesa.jwork_android;
 
 public class Location {
     private String province, description, city;
 
+    /**
+     * constructor objek location
+     * @param province
+     * @param city
+     * @param description
+     */
     public Location(String province, String city, String description){
         this.city = city;
         this.province = province;
         this.description = description;
     }
 
+    /**
+     * method getter provinsi
+     * @return provinsi
+     */
     public String getProvince(){
         return province;
     }
